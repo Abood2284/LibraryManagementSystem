@@ -1,4 +1,3 @@
-
 package com.company;
 
 import java.time.LocalDateTime;
@@ -30,32 +29,59 @@ interface Books{
 
 }
 
-
-class library_2 implements Books{
+/**
+ * This is a library management [small project] class
+ * @author Abdul raheem
+ * @since 2021
+ * @version 0.1
+ * @see <a href="https://github.com/Abood2284/LibraryManagementSystem" target="_blank">Github Source Code</a>
+ */
+class library_2 implements com.company.Books {
+    /**
+     *
+     * @param bookname name of the book to be added in the arrayList
+     * @param bookauthor name of the author with the same book you added
+     */
     public void AddBook(String bookname, String bookauthor){
         bookName.add(bookname);
         bookAuthor.add(bookauthor);
         System.out.println("Book added successfully");
     }
+
+    /**
+     * Displays all the books available with corresponds to the author name
+     * @throws com.company.libraryExceptions if bookName array<List> is empty
+     */
     public void ShowBook(){
         try {
             if (bookName.isEmpty()){
-                throw new libraryExceptions();
+                throw new com.company.libraryExceptions();
             }else {
                 for (int i =0; i<bookName.size(); i++){
                     System.out.println("BookName: "+ bookName.get(i) +"\t bookAuthor: "+ bookAuthor.get(i));
                 }
             }
-        }catch(libraryExceptions e){
+        }catch(com.company.libraryExceptions e){
             System.out.println(e.emptyStorage());
         }
     }
+
+    /**
+     * Display those books that are issue to the user [ Note:- these books are not available in the main array list ]
+     */
     public void ShowIssuedBooks() {
         System.out.println("Books issued");
         for (int i =0; i<bookIssued.size(); i++){
             System.out.println("BookName: "+bookIssued.get(i)+"\t Borrower: "+bookIssuedTo.get(i)+"\t BookIssueDate: "+bookIssuedOn.get(i));
         }
     }
+
+    /**
+     *
+     * @param BookYouWant Name of the book you want to Borrow
+     * @param borrowerName Name of the user Currently Running the program
+     * @param bookIssuedon You Don't need to pass this. It is automatically passed by the method it is called
+     */
     public void IssueBook(String BookYouWant, String borrowerName, String bookIssuedon){
         for (int i=0; i<bookName.size(); i++){
             if (bookName.get(i).equals(BookYouWant)){
@@ -63,6 +89,7 @@ class library_2 implements Books{
                 bookIssued.add(BookYouWant);
                 bookIssuedTo.add(borrowerName);
                 bookIssuedOn.add(bookIssuedon);
+                //                Storing the original information of the book in temp array
                 bookIssuedTemp.add(BookYouWant);
                 String temp = bookAuthor.get(i);
                 bookIssuedAuthorTemp.add(temp);
@@ -77,6 +104,13 @@ class library_2 implements Books{
             }
         }
     }
+
+    /**
+     *
+     * @param borrowerName2 -> Name of the user who borrowed the book/who is running the program
+     * @param returnBook -> Name of the book you borrowed
+     * @throws com.company.libraryExceptions -> If Book you want to return is not issued from our library or the borrower himself didn't came to return the book [ same name you gave when borrowing the book ]
+     */
     public void returnBorrowedBook(String borrowerName2, String returnBook){
         try {
             for (int i=0; i<bookIssued.size(); i++){
@@ -93,16 +127,17 @@ class library_2 implements Books{
                     System.out.println("Book Returned Successfully");
 
                 }else {
-                    throw new libraryExceptions();
+                    throw new com.company.libraryExceptions();
                 }
 
             }
-        }catch(libraryExceptions e){
+        }catch(com.company.libraryExceptions e){
             System.out.println(e.noMatch());
         }
     }
 }
-public class Main {
+
+public class _104_Exercise7 {
     public static void statement(){
         System.out.println("""
             0. Leave
@@ -111,17 +146,21 @@ public class Main {
             3. BorrowBook
             4. ReturnBorrowedBook""");
     }
+
+    /**
+     * This is where everything happens just call this method in main
+     */
     public static void Start(){
         LocalDateTime dt = LocalDateTime.now();
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        library_2 Manager1 = new library_2();
+        com.company.library_2 Manager1 = new com.company.library_2();
         boolean flag = true;
         Scanner scan = new Scanner(System.in);
         System.out.println("Manager: How may i help you with sir");
         System.out.println("(Press an key!!!)");
         while(flag){
-                scan.nextLine();
-                statement();
+            scan.nextLine();
+            statement();
             System.out.print(">> ");
             int x = scan.nextInt();
             switch(x){
@@ -139,29 +178,29 @@ public class Main {
                     bokauthor = scan.nextLine();
                     try {
                         if (bookName.contains(boknam) || bookIssued.contains(boknam)){
-                            throw new libraryExceptions();
+                            throw new com.company.libraryExceptions();
                         }else{
                             Manager1.AddBook(boknam, bokauthor);
                         }
-                    }catch(libraryExceptions e){
+                    }catch(com.company.libraryExceptions e){
                         System.out.println(e.bookAlreadyAvailable());
                     }
                 }
                 case 2 -> {
                     try {
                         if (bookName.isEmpty()){
-                            throw new libraryExceptions();
+                            throw new com.company.libraryExceptions();
                         }else {
                             Manager1.ShowBook();
                         }
-                    }catch(libraryExceptions e){
+                    }catch(com.company.libraryExceptions e){
                         System.out.println(e.emptyStorage());
                     }
                 }
                 case 3 -> {
                     try {
                         if (bookName.isEmpty()){
-                            throw new libraryExceptions();
+                            throw new com.company.libraryExceptions();
                         }else {
                             for (int i =0; i<bookName.size(); i++){
                                 System.out.println("BookName: "+ bookName.get(i) +"\t bookAuthor: "+ bookAuthor.get(i));
@@ -173,10 +212,11 @@ public class Main {
                             System.out.println("Your name sir");
                             System.out.print(">> ");
                             String borrowerNamE = scan.nextLine();
-                            String myDate1 = dt.format(df);
+                            String myDate1 = dt.format(df);  // to get the current date
+                            // will pass all the details to IssueBook method
                             Manager1.IssueBook(bookyOUwant, borrowerNamE, myDate1);
                         }
-                    }catch(libraryExceptions e){
+                    }catch(com.company.libraryExceptions e){
                         System.out.println(e.emptyStorage());
                     }
                 }
